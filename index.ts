@@ -14,16 +14,30 @@ interface Immutables {
   maxLiquidityPerTick: number
 }
 
-async function getPoolImmutables(poolContract: any) {
-  const PoolImmutables: Immutables = {
-    factory: await poolContract.factory(),
-    token0: await poolContract.token0(),
-    token1: await poolContract.token1(),
-    fee: await poolContract.fee(),
-    tickSpacing: await poolContract.tickSpacing(),
-    maxLiquidityPerTick: await poolContract.maxLiquidityPerTick(),
+async function getPoolImmutables(poolContract: any): Promise<Immutables> {
+  const [
+    factory,
+    token0,
+    token1,
+    fee,
+    tickSpacing,
+    maxLiquidityPerTick,
+  ] = await Promise.all([
+    poolContract.factory(),
+    poolContract.token0(),
+    poolContract.token1(),
+    poolContract.fee(),
+    poolContract.tickSpacing(),
+    poolContract.maxLiquidityPerTick(),
+  ]);
+  return {
+    factory,
+    token0,
+    token1,
+    fee,
+    tickSpacing,
+    maxLiquidityPerTick,
   };
-  return PoolImmutables;
 }
 
 async function main() {
