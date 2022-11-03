@@ -1,0 +1,8 @@
+{
+  "name": "uniswap-script",
+  "version": "0.1.0",
+  "main": "index.js",
+  "repository": "https://github.com/wrule/uniswap-script.git",
+  "license": "MIT",
+  "private": false
+}
