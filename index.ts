@@ -1,7 +1,8 @@
-
-import { Pool } from '@uniswap/v3-sdk'
 import { ethers } from 'ethers';
-import { Address } from 'cluster'
+import { Address } from 'cluster';
+import { Pool } from '@uniswap/v3-sdk';
+import { Token } from '@uniswap/sdk-core';
+import { abi as IUniswapV3PoolABI } from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json';
 
 const secret = require('./.secret.json');
 
@@ -51,7 +52,7 @@ async function main() {
     'function tickSpacing() external view returns (int24)',
     'function maxLiquidityPerTick() external view returns (uint128)',
   ];
-  const poolContract = new ethers.Contract(poolAddress, poolImmutablesAbi, provider);
+  const poolContract = new ethers.Contract(poolAddress, IUniswapV3PoolABI, provider);
   const result = await getPoolImmutables(poolContract);
   console.log(result);
 }
