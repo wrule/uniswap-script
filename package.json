@@ -11,6 +11,8 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
+    "@uniswap/sdk-core": "^3.1.0",
+    "@uniswap/v3-sdk": "^3.9.0",
     "ethers": "^5.7.2"
   }
 }
