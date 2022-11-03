@@ -14,8 +14,19 @@ interface Immutables {
   maxLiquidityPerTick: number
 }
 
+async function getPoolImmutables(poolContract: any) {
+  const PoolImmutables: Immutables = {
+    factory: await poolContract.factory(),
+    token0: await poolContract.token0(),
+    token1: await poolContract.token1(),
+    fee: await poolContract.fee(),
+    tickSpacing: await poolContract.tickSpacing(),
+    maxLiquidityPerTick: await poolContract.maxLiquidityPerTick(),
+  };
+  return PoolImmutables;
+}
+
 async function main() {
-  console.log('你好，世界');
   const provider = new ethers.providers.JsonRpcProvider(`https://mainnet.infura.io/v3/${secret.prj_id}`);
   const poolAddress = '0x8ad599c3A0ff1De082011EFDDc58f1908eb6e6D8';
   const poolImmutablesAbi = [
@@ -27,20 +38,7 @@ async function main() {
     'function maxLiquidityPerTick() external view returns (uint128)',
   ];
   const poolContract = new ethers.Contract(poolAddress, poolImmutablesAbi, provider);
-
-  async function getPoolImmutables() {
-    const PoolImmutables: Immutables = {
-      factory: await poolContract.factory(),
-      token0: await poolContract.token0(),
-      token1: await poolContract.token1(),
-      fee: await poolContract.fee(),
-      tickSpacing: await poolContract.tickSpacing(),
-      maxLiquidityPerTick: await poolContract.maxLiquidityPerTick(),
-    };
-    return PoolImmutables;
-  }
-
-  const result = await getPoolImmutables();
+  const result = await getPoolImmutables(poolContract);
   console.log(result);
 }
 
