@@ -9,5 +9,8 @@
   },
   "repository": "https://github.com/wrule/uniswap-script.git",
   "license": "MIT",
-  "private": false
+  "private": false,
+  "dependencies": {
+    "ethers": "^5.7.2"
+  }
 }
