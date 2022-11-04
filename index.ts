@@ -7,12 +7,23 @@ import { abi as IUniswapV3PoolABI } from '@uniswap/v3-core/artifacts/contracts/i
 const secret = require('./.secret.json');
 
 interface Immutables {
-  factory: Address
-  token0: Address
-  token1: Address
-  fee: number
-  tickSpacing: number
-  maxLiquidityPerTick: number
+  factory: Address;
+  token0: Address;
+  token1: Address;
+  fee: number;
+  tickSpacing: number;
+  maxLiquidityPerTick: ethers.BigNumber;
+}
+
+interface State {
+  liquidity: ethers.BigNumber;
+  sqrtPriceX96: ethers.BigNumber;
+  tick: number;
+  observationIndex: number;
+  observationCardinality: number;
+  observationCardinalityNext: number;
+  feeProtocol: number;
+  unlocked: boolean;
 }
 
 async function getPoolImmutables(poolContract: any): Promise<Immutables> {
