@@ -82,6 +82,8 @@ async function main() {
     state.tick,
   );
   console.log(poolExample);
+  console.log(poolExample.token0Price.toFixed());
+  console.log(poolExample.token1Price.toFixed());
 }
 
 main();
