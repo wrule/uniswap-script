@@ -52,6 +52,20 @@ async function getPoolImmutables(poolContract: any): Promise<Immutables> {
   };
 }
 
+async function getPoolState(poolContract: any): Promise<State> {
+  const [liquidity, slot] = await Promise.all([poolContract.liquidity(), poolContract.slot0()]);
+  return {
+    liquidity,
+    sqrtPriceX96: slot[0],
+    tick: slot[1],
+    observationIndex: slot[2],
+    observationCardinality: slot[3],
+    observationCardinalityNext: slot[4],
+    feeProtocol: slot[5],
+    unlocked: slot[6],
+  };
+}
+
 async function main() {
   const provider = new ethers.providers.JsonRpcProvider(`https://mainnet.infura.io/v3/${secret.prj_id}`);
   const poolAddress = '0x8ad599c3A0ff1De082011EFDDc58f1908eb6e6D8';
