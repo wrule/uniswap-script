@@ -71,8 +71,17 @@ async function main() {
   const poolAddress = '0x8ad599c3A0ff1De082011EFDDc58f1908eb6e6D8';
   const poolContract = new ethers.Contract(poolAddress, IUniswapV3PoolABI, provider);
   const [immutables, state] = await Promise.all([getPoolImmutables(poolContract), getPoolState(poolContract)]);
-  console.log(immutables);
-  console.log(state);
+  const USDC = new Token(3, (immutables as any).token0, 6, 'USDC', 'USD Coin');
+  const WETH = new Token(3, (immutables as any).token1, 18, 'WETH', 'Wrapped Ether');
+  const poolExample = new Pool(
+    USDC,
+    WETH,
+    immutables.fee,
+    state.sqrtPriceX96.toString(),
+    state.liquidity.toString(),
+    state.tick,
+  );
+  console.log(poolExample);
 }
 
 main();
