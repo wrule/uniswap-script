@@ -69,6 +69,11 @@ async function getPoolState(poolContract: any): Promise<State> {
   };
 }
 
+async function get_erc20_info(erc20: ERC20) {
+  const [symbol, name, decimals] = await Promise.all([erc20.symbol(), erc20.name(), erc20.decimals()]);
+  return { symbol, name, decimals };
+}
+
 async function main() {
   const provider = new ethers.providers.JsonRpcProvider(`https://mainnet.infura.io/v3/${secret.prj_id}`);
   const signer = provider.getSigner();
@@ -77,18 +82,10 @@ async function main() {
   const [immutables, state] = await Promise.all([getPoolImmutables(poolContract), getPoolState(poolContract)]);
   const erc20_0 = new ERC20((immutables as any).token0, IERC20ABI, provider, signer);
   const erc20_1 = new ERC20((immutables as any).token1, IERC20ABI, provider, signer);
-  const [
-    symbol_0, name_0, decimals_0,
-    symbol_1, name_1, decimals_1,
-  ] = await Promise.all([
-    erc20_0.symbol(), erc20_0.name(), erc20_0.decimals(),
-    erc20_1.symbol(), erc20_1.name(), erc20_1.decimals(),
-  ]);
-  console.log(symbol_0, name_0, decimals_0);
-  console.log(symbol_1, name_1, decimals_1);
-  return;
-  const USDC = new Token(3, (immutables as any).token0, 6, 'USDC', 'USD Coin');
-  const WETH = new Token(3, (immutables as any).token1, 18, 'WETH', 'Wrapped Ether');
+
+  const [erc20_info_0, erc20_info_1] = await Promise.all([get_erc20_info(erc20_0), get_erc20_info(erc20_1)]);
+  const USDC = new Token(3, (immutables as any).token0, erc20_info_0.decimals, erc20_info_0.symbol, erc20_info_0.name);
+  const WETH = new Token(3, (immutables as any).token1, erc20_info_1.decimals, erc20_info_1.symbol, erc20_info_1.name);
   const poolExample = new Pool(
     USDC,
     WETH,
