@@ -77,18 +77,18 @@ async function get_erc20_info(erc20: ERC20) {
 async function main() {
   const provider = new ethers.providers.JsonRpcProvider(`https://mainnet.infura.io/v3/${secret.prj_id}`);
   const signer = provider.getSigner();
-  const poolAddress = '0x8ad599c3A0ff1De082011EFDDc58f1908eb6e6D8';
+  const poolAddress = '0x92560c178ce069cc014138ed3c2f5221ba71f58a';
   const poolContract = new ethers.Contract(poolAddress, IUniswapV3PoolABI, provider);
   const [immutables, state] = await Promise.all([getPoolImmutables(poolContract), getPoolState(poolContract)]);
   const erc20_0 = new ERC20((immutables as any).token0, IERC20ABI, provider, signer);
   const erc20_1 = new ERC20((immutables as any).token1, IERC20ABI, provider, signer);
 
-  const [erc20_info_0, erc20_info_1] = await Promise.all([get_erc20_info(erc20_0), get_erc20_info(erc20_1)]);
-  const USDC = new Token(3, (immutables as any).token0, erc20_info_0.decimals, erc20_info_0.symbol, erc20_info_0.name);
-  const WETH = new Token(3, (immutables as any).token1, erc20_info_1.decimals, erc20_info_1.symbol, erc20_info_1.name);
+  const [erc20_0_info, erc20_1_info] = await Promise.all([get_erc20_info(erc20_0), get_erc20_info(erc20_1)]);
+  const token_a = new Token(3, (immutables as any).token0, erc20_0_info.decimals, erc20_0_info.symbol, erc20_0_info.name);
+  const token_b = new Token(3, (immutables as any).token1, erc20_1_info.decimals, erc20_1_info.symbol, erc20_1_info.name);
   const poolExample = new Pool(
-    USDC,
-    WETH,
+    token_a,
+    token_b,
     immutables.fee,
     state.sqrtPriceX96.toString(),
     state.liquidity.toString(),
