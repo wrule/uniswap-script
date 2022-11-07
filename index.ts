@@ -2,9 +2,10 @@ import { ethers } from 'ethers';
 import { Address } from 'cluster';
 import { Pool } from '@uniswap/v3-sdk';
 import { Token } from '@uniswap/sdk-core';
-// import { abi as IUniswapV3PoolABI } from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json';
-import { abi as IERC20Minimal } from './abi.json';
+import { abi as IUniswapV3PoolABI } from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json';
 import { ERC20 } from './contracts/erc20';
+import IERC20ABI from './contracts/erc20/abi.json';
+import fs from 'fs';
 
 const secret = require('./.secret.json');
 
@@ -71,14 +72,20 @@ async function getPoolState(poolContract: any): Promise<State> {
 async function main() {
   const provider = new ethers.providers.JsonRpcProvider(`https://mainnet.infura.io/v3/${secret.prj_id}`);
   const signer = provider.getSigner();
-  // const poolAddress = '0x8ad599c3A0ff1De082011EFDDc58f1908eb6e6D8';
-  // const poolContract = new ethers.Contract(poolAddress, IUniswapV3PoolABI, provider);
-  // const [immutables, state] = await Promise.all([getPoolImmutables(poolContract), getPoolState(poolContract)]);
-  // console.log(immutables);
-  const erc20_1 = new ERC20('0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', IERC20Minimal, provider, signer);
-  const erc20_2 = new ERC20('0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', IERC20Minimal, provider, signer);
-  const [name1, name2] = await Promise.all([erc20_1.name(), erc20_2.name()]);
-  console.log(name1, name2);
+  const poolAddress = '0x8ad599c3A0ff1De082011EFDDc58f1908eb6e6D8';
+  const poolContract = new ethers.Contract(poolAddress, IUniswapV3PoolABI, provider);
+  const [immutables, state] = await Promise.all([getPoolImmutables(poolContract), getPoolState(poolContract)]);
+  const erc20_0 = new ERC20((immutables as any).token0, IERC20ABI, provider, signer);
+  const erc20_1 = new ERC20((immutables as any).token1, IERC20ABI, provider, signer);
+  const [
+    symbol_0, name_0, decimals_0,
+    symbol_1, name_1, decimals_1,
+  ] = await Promise.all([
+    erc20_0.symbol(), erc20_0.name(), erc20_0.decimals(),
+    erc20_1.symbol(), erc20_1.name(), erc20_1.decimals(),
+  ]);
+  console.log(symbol_0, name_0, decimals_0);
+  console.log(symbol_1, name_1, decimals_1);
   return;
   const USDC = new Token(3, (immutables as any).token0, 6, 'USDC', 'USD Coin');
   const WETH = new Token(3, (immutables as any).token1, 18, 'WETH', 'Wrapped Ether');
