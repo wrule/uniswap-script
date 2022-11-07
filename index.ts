@@ -77,7 +77,7 @@ async function get_erc20_info(erc20: ERC20) {
 async function main() {
   const provider = new ethers.providers.JsonRpcProvider(`https://mainnet.infura.io/v3/${secret.prj_id}`);
   const signer = provider.getSigner();
-  const poolAddress = '0x92560c178ce069cc014138ed3c2f5221ba71f58a';
+  const poolAddress = '0xfad57d2039c21811c8f2b5d5b65308aa99d31559';
   const poolContract = new ethers.Contract(poolAddress, IUniswapV3PoolABI, provider);
   const [immutables, state] = await Promise.all([getPoolImmutables(poolContract), getPoolState(poolContract)]);
   const erc20_0 = new ERC20((immutables as any).token0, IERC20ABI, provider, signer);
