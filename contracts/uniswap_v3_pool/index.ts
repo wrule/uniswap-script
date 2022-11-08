@@ -10,35 +10,35 @@ extends Contract {
     super(...parameters);
   }
 
-  public async factory(): Promise<string> {
+  public async _factory(): Promise<string> {
     return await this.cprovider.factory();
   }
 
-  public async token0(): Promise<string> {
+  public async _token0(): Promise<string> {
     return await this.cprovider.token0();
   }
 
-  public async token1(): Promise<string> {
+  public async _token1(): Promise<string> {
     return await this.cprovider.token1();
   }
 
-  public async fee(): Promise<number> {
+  public async _fee(): Promise<number> {
     return await this.cprovider.fee();
   }
 
-  public async tickSpacing(): Promise<number> {
+  public async _tickSpacing(): Promise<number> {
     return await this.cprovider.tickSpacing();
   }
 
-  public async maxLiquidityPerTick(): Promise<BigNumber> {
+  public async _maxLiquidityPerTick(): Promise<BigNumber> {
     return await this.cprovider.maxLiquidityPerTick();
   }
 
-  public async liquidity(): Promise<BigNumber> {
+  public async _liquidity(): Promise<BigNumber> {
     return await this.cprovider.liquidity();
   }
 
-  public async slot0(): Promise<[BigNumber, number, number, number, number, number, boolean]> {
+  public async _slot0(): Promise<[BigNumber, number, number, number, number, number, boolean]> {
     return await this.cprovider.slot0();
   }
 }
