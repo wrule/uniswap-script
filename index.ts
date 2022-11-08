@@ -6,6 +6,7 @@ import { abi as IUniswapV3PoolABI } from '@uniswap/v3-core/artifacts/contracts/i
 import { ERC20 } from './contracts/erc20';
 import IERC20ABI from './contracts/erc20/abi.json';
 import fs from 'fs';
+import { UniswapV3Pool } from './contracts/uniswap_v3_pool';
 
 const secret = require('./.secret.json');
 
@@ -55,50 +56,14 @@ async function getPoolImmutables(poolContract: any): Promise<Immutables> {
   };
 }
 
-async function getPoolState(poolContract: any): Promise<State> {
-  const [liquidity, slot] = await Promise.all([poolContract.liquidity(), poolContract.slot0()]);
-  return {
-    liquidity,
-    sqrtPriceX96: slot[0],
-    tick: slot[1],
-    observationIndex: slot[2],
-    observationCardinality: slot[3],
-    observationCardinalityNext: slot[4],
-    feeProtocol: slot[5],
-    unlocked: slot[6],
-  };
-}
-
-async function get_erc20_info(erc20: ERC20) {
-  const [symbol, name, decimals] = await Promise.all([erc20.symbol(), erc20.name(), erc20.decimals()]);
-  return { symbol, name, decimals };
-}
-
 async function main() {
   const provider = new ethers.providers.JsonRpcProvider(`https://goerli.infura.io/v3/${secret.prj_id}`);
   const signer = provider.getSigner();
   const poolAddress = '0x6337B3caf9C5236c7f3D1694410776119eDaF9FA';
-  const poolContract = new ethers.Contract(poolAddress, IUniswapV3PoolABI, provider);
-  console.log('获取池信息');
-  const [immutables, state] = await Promise.all([getPoolImmutables(poolContract), getPoolState(poolContract)]);
-  console.log('信息已获取');
-  const erc20_0 = new ERC20((immutables as any).token0, IERC20ABI, provider, signer);
-  const erc20_1 = new ERC20((immutables as any).token1, IERC20ABI, provider, signer);
-
-  const [erc20_0_info, erc20_1_info] = await Promise.all([get_erc20_info(erc20_0), get_erc20_info(erc20_1)]);
-  const token_a = new Token(3, (immutables as any).token0, erc20_0_info.decimals, erc20_0_info.symbol, erc20_0_info.name);
-  const token_b = new Token(3, (immutables as any).token1, erc20_1_info.decimals, erc20_1_info.symbol, erc20_1_info.name);
-  const poolExample = new Pool(
-    token_a,
-    token_b,
-    immutables.fee,
-    state.sqrtPriceX96.toString(),
-    state.liquidity.toString(),
-    state.tick,
-  );
-  console.log(poolExample.token0.symbol, poolExample.token1.symbol);
-  console.log(poolExample.token0Price.toFixed());
-  console.log(poolExample.token1Price.toFixed());
+  const pool = new UniswapV3Pool(poolAddress, IUniswapV3PoolABI, provider, signer);
+  await pool.Update();
+  console.log(pool.Pool.token0Price.toFixed());
+  console.log(pool.Pool.token1Price.toFixed());
 }
 
 main();
