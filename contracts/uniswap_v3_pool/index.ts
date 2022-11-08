@@ -37,4 +37,8 @@ extends Contract {
   public async liquidity(): Promise<BigNumber> {
     return await this.cprovider.liquidity();
   }
+
+  public async slot0(): Promise<[BigNumber, number, number, number, number, number, boolean]> {
+    return await this.cprovider.slot0();
+  }
 }
