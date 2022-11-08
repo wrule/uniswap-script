@@ -35,6 +35,14 @@ extends Contract {
   private immutables!: Immutables;
   private state!: State;
 
+  public get Immutables() {
+    return this.immutables;
+  }
+
+  public get State() {
+    return this.state;
+  }
+
   public async UpdateImmutables() {
     const [
       factory,
