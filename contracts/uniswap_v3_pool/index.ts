@@ -28,7 +28,7 @@ interface State {
 }
 
 export
-interface IERC20_Meta {
+interface ERC20_Meta {
   symbol: string;
   name: string;
   decimals: number;
@@ -140,7 +140,7 @@ extends Contract {
     );
   }
 
-  public async GetERC20Info(erc20: ERC20): Promise<IERC20_Meta> {
+  public async GetERC20Info(erc20: ERC20): Promise<ERC20_Meta> {
     const [
       symbol,
       name,
