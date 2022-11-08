@@ -75,9 +75,9 @@ async function get_erc20_info(erc20: ERC20) {
 }
 
 async function main() {
-  const provider = new ethers.providers.JsonRpcProvider(`https://optimism-mainnet.infura.io/v3/${secret.prj_id}`);
+  const provider = new ethers.providers.JsonRpcProvider(`https://goerli.infura.io/v3/${secret.prj_id}`);
   const signer = provider.getSigner();
-  const poolAddress = '0x85C31FFA3706d1cce9d525a00f1C7D4A2911754c';
+  const poolAddress = '0x6337B3caf9C5236c7f3D1694410776119eDaF9FA';
   const poolContract = new ethers.Contract(poolAddress, IUniswapV3PoolABI, provider);
   console.log('获取池信息');
   const [immutables, state] = await Promise.all([getPoolImmutables(poolContract), getPoolState(poolContract)]);
