@@ -1,4 +1,4 @@
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { Contract } from '../';
 
 type ContractConstructorParameters = ConstructorParameters<typeof Contract>;
@@ -30,7 +30,11 @@ extends Contract {
     return await this.cprovider.tickSpacing();
   }
 
-  public async maxLiquidityPerTick(): Promise<number> {
+  public async maxLiquidityPerTick(): Promise<BigNumber> {
     return await this.cprovider.maxLiquidityPerTick();
+  }
+
+  public async liquidity(): Promise<BigNumber> {
+    return await this.cprovider.liquidity();
   }
 }
