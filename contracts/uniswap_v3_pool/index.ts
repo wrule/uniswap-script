@@ -1,6 +1,7 @@
 import { BigNumber, ethers } from 'ethers';
 import { Contract } from '../';
 import { ERC20 } from '../erc20';
+import { Token } from '@uniswap/sdk-core';
 import IERC20ABI from '../erc20/abi.json';
 
 export
@@ -25,6 +26,13 @@ interface State {
   unlocked: boolean;
 }
 
+export
+interface IERC20_Meta {
+  symbol: string;
+  name: string;
+  decimals: number;
+}
+
 type ContractConstructorParameters = ConstructorParameters<typeof Contract>;
 
 export
@@ -36,6 +44,8 @@ extends Contract {
 
   private immutables!: Immutables;
   private state!: State;
+  private token0!: Token;
+  private token1!: Token;
 
   public get Immutables() {
     return this.immutables;
@@ -96,7 +106,49 @@ extends Contract {
     };
   }
 
+  public async UpdateToken0() {
+    const meta = await this.GetERC20Info(this.ERC20_Token0);
+    this.token0 = new Token(
+      3,
+      this.immutables.token0,
+      meta.decimals,
+      meta.symbol,
+      meta.name,
+    );
+  }
+
+  public async UpdateToken1() {
+    const meta = await this.GetERC20Info(this.ERC20_Token1);
+    this.token1 = new Token(
+      3,
+      this.immutables.token1,
+      meta.decimals,
+      meta.symbol,
+      meta.name,
+    );
+  }
+
+  public async GetERC20Info(erc20: ERC20): Promise<IERC20_Meta> {
+    const [
+      symbol,
+      name,
+      decimals,
+    ] = await Promise.all([
+      erc20.symbol(),
+      erc20.name(),
+      erc20.decimals(),
+    ]);
+    return { symbol, name, decimals };
+  }
+
   public async Update() {
-    await Promise.all([this.UpdateImmutables(), this.UpdateState()]);
+    await Promise.all([
+      this.UpdateImmutables(),
+      this.UpdateState(),
+    ]);
+    await Promise.all([
+      this.UpdateToken0(),
+      this.UpdateToken1(),
+    ]);
   }
 }
