@@ -1,6 +1,28 @@
 import { BigNumber, ethers } from 'ethers';
 import { Contract } from '../';
 
+export
+interface Immutables {
+  factory: string;
+  token0: string;
+  token1: string;
+  fee: number;
+  tickSpacing: number;
+  maxLiquidityPerTick: ethers.BigNumber;
+}
+
+export
+interface State {
+  liquidity: ethers.BigNumber;
+  sqrtPriceX96: ethers.BigNumber;
+  tick: number;
+  observationIndex: number;
+  observationCardinality: number;
+  observationCardinalityNext: number;
+  feeProtocol: number;
+  unlocked: boolean;
+}
+
 type ContractConstructorParameters = ConstructorParameters<typeof Contract>;
 
 export
@@ -10,35 +32,53 @@ extends Contract {
     super(...parameters);
   }
 
-  public async _factory(): Promise<string> {
-    return await this.cprovider.factory();
+  private immutables!: Immutables;
+  private state!: State;
+
+  public async UpdateImmutables() {
+    const [
+      factory,
+      token0,
+      token1,
+      fee,
+      tickSpacing,
+      maxLiquidityPerTick,
+    ] = await Promise.all([
+      this.cprovider.factory(),
+      this.cprovider.token0(),
+      this.cprovider.token1(),
+      this.cprovider.fee(),
+      this.cprovider.tickSpacing(),
+      this.cprovider.maxLiquidityPerTick(),
+    ]);
+    this.immutables = {
+      factory,
+      token0,
+      token1,
+      fee,
+      tickSpacing,
+      maxLiquidityPerTick,
+    };
   }
 
-  public async _token0(): Promise<string> {
-    return await this.cprovider.token0();
+  public async UpdateState() {
+    const [liquidity, slot] = await Promise.all([
+      this.cprovider.liquidity(),
+      this.cprovider.slot0(),
+    ]);
+    this.state = {
+      liquidity,
+      sqrtPriceX96: slot[0],
+      tick: slot[1],
+      observationIndex: slot[2],
+      observationCardinality: slot[3],
+      observationCardinalityNext: slot[4],
+      feeProtocol: slot[5],
+      unlocked: slot[6],
+    };
   }
 
-  public async _token1(): Promise<string> {
-    return await this.cprovider.token1();
-  }
-
-  public async _fee(): Promise<number> {
-    return await this.cprovider.fee();
-  }
-
-  public async _tickSpacing(): Promise<number> {
-    return await this.cprovider.tickSpacing();
-  }
-
-  public async _maxLiquidityPerTick(): Promise<BigNumber> {
-    return await this.cprovider.maxLiquidityPerTick();
-  }
-
-  public async _liquidity(): Promise<BigNumber> {
-    return await this.cprovider.liquidity();
-  }
-
-  public async _slot0(): Promise<[BigNumber, number, number, number, number, number, boolean]> {
-    return await this.cprovider.slot0();
+  public async Update() {
+    await Promise.all([this.UpdateImmutables(), this.UpdateState()]);
   }
 }
