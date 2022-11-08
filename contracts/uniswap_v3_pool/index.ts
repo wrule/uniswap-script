@@ -1,5 +1,7 @@
 import { BigNumber, ethers } from 'ethers';
 import { Contract } from '../';
+import { ERC20 } from '../erc20';
+import IERC20ABI from '../erc20/abi.json';
 
 export
 interface Immutables {
@@ -41,6 +43,14 @@ extends Contract {
 
   public get State() {
     return this.state;
+  }
+
+  public get ERC20_Token0() {
+    return new ERC20(this.immutables.token0, IERC20ABI, this.provider, this.signer);
+  }
+
+  public get ERC20_Token1() {
+    return new ERC20(this.immutables.token1, IERC20ABI, this.provider, this.signer);
   }
 
   public async UpdateImmutables() {
