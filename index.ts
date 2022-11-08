@@ -77,9 +77,11 @@ async function get_erc20_info(erc20: ERC20) {
 async function main() {
   const provider = new ethers.providers.JsonRpcProvider(`https://goerli.infura.io/v3/${secret.prj_id}`);
   const signer = provider.getSigner();
-  const poolAddress = '0x68b3465833fb72a70ecdf485e0e4c7bd8665fc45';
+  const poolAddress = '0x8ad599c3A0ff1De082011EFDDc58f1908eb6e6D8';
   const poolContract = new ethers.Contract(poolAddress, IUniswapV3PoolABI, provider);
+  console.log('获取池信息');
   const [immutables, state] = await Promise.all([getPoolImmutables(poolContract), getPoolState(poolContract)]);
+  console.log('信息已获取');
   const erc20_0 = new ERC20((immutables as any).token0, IERC20ABI, provider, signer);
   const erc20_1 = new ERC20((immutables as any).token1, IERC20ABI, provider, signer);
 
