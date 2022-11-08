@@ -2,6 +2,7 @@ import { BigNumber, ethers } from 'ethers';
 import { Contract } from '../';
 import { ERC20 } from '../erc20';
 import { Token } from '@uniswap/sdk-core';
+import { Pool } from '@uniswap/v3-sdk';
 import IERC20ABI from '../erc20/abi.json';
 
 export
@@ -61,6 +62,17 @@ extends Contract {
 
   public get ERC20_Token1() {
     return new ERC20(this.immutables.token1, IERC20ABI, this.provider, this.signer);
+  }
+
+  public get Pool() {
+    return new Pool(
+      this.token0,
+      this.token1,
+      this.immutables.fee,
+      this.state.sqrtPriceX96.toString(),
+      this.state.liquidity.toString(),
+      this.state.tick,
+    );
   }
 
   public async UpdateImmutables() {
