@@ -11,7 +11,7 @@ async function main() {
   const poolAddress = '0x85149247691df622eaF1a8Bd0CaFd40BC45154a9';
   const pool = new UniswapV3Pool(poolAddress, IUniswapV3PoolABI, provider, signer);
 
-  const quoterContract = new ethers.Contract(poolAddress, QuoterABI, provider);
+  const quoterContract = new ethers.Contract('0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6', QuoterABI, provider);
 
   await pool.Update();
   setInterval(async () => {
