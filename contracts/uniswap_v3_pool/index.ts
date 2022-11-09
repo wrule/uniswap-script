@@ -12,13 +12,13 @@ interface Immutables {
   token1: string;
   fee: number;
   tickSpacing: number;
-  maxLiquidityPerTick: ethers.BigNumber;
+  maxLiquidityPerTick: BigNumber;
 }
 
 export
 interface State {
-  liquidity: ethers.BigNumber;
-  sqrtPriceX96: ethers.BigNumber;
+  liquidity: BigNumber;
+  sqrtPriceX96: BigNumber;
   tick: number;
   observationIndex: number;
   observationCardinality: number;
