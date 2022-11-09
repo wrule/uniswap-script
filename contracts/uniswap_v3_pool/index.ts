@@ -1,4 +1,4 @@
-import { BigNumber, ethers } from 'ethers';
+import { BigNumber } from 'ethers';
 import { Contract } from '../';
 import { ERC20 } from '../erc20';
 import { Token } from '@uniswap/sdk-core';
