@@ -59,7 +59,7 @@ async function getPoolImmutables(poolContract: any): Promise<Immutables> {
 async function main() {
   const provider = new ethers.providers.JsonRpcProvider(`https://optimism-mainnet.infura.io/v3/${secret.prj_id}`);
   const signer = provider.getSigner();
-  const poolAddress = '0xAD4c666fC170B468B19988959eb931a3676f0e9F';
+  const poolAddress = '0x85149247691df622eaF1a8Bd0CaFd40BC45154a9';
   const pool = new UniswapV3Pool(poolAddress, IUniswapV3PoolABI, provider, signer);
   await pool.Update();
   console.log(`1${pool.Pool.token0.symbol} = ${pool.Pool.token0Price.toFixed()}${pool.Pool.token1.symbol}`);
