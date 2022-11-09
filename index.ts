@@ -1,6 +1,7 @@
 import { ethers } from 'ethers';
 import { abi as IUniswapV3PoolABI } from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json';
 import { UniswapV3Pool } from './contracts/uniswap_v3_pool';
+import { abi as QuoterABI } from '@uniswap/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json';
 
 const secret = require('./.secret.json');
 
@@ -9,6 +10,9 @@ async function main() {
   const signer = provider.getSigner();
   const poolAddress = '0x85149247691df622eaF1a8Bd0CaFd40BC45154a9';
   const pool = new UniswapV3Pool(poolAddress, IUniswapV3PoolABI, provider, signer);
+
+  const quoterContract = new ethers.Contract(poolAddress, QuoterABI, provider);
+
   await pool.Update();
   setInterval(async () => {
     await pool.UpdateState();
