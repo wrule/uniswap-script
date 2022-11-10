@@ -6,9 +6,9 @@ import { abi as QuoterABI } from '@uniswap/v3-periphery/artifacts/contracts/lens
 const secret = require('./.secret.json');
 
 async function main() {
-  const provider = new ethers.providers.JsonRpcProvider(`https://mainnet.infura.io/v3/${secret.prj_id}`);
+  const provider = new ethers.providers.JsonRpcProvider(`https://optimism-mainnet.infura.io/v3/${secret.prj_id}`);
   const signer = provider.getSigner();
-  const poolAddress = '0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640';
+  const poolAddress = '0x85149247691df622eaF1a8Bd0CaFd40BC45154a9';
   const pool = new UniswapV3Pool(poolAddress, IUniswapV3PoolABI, provider, signer);
   await pool.Update();
 
@@ -24,11 +24,11 @@ async function main() {
   );
   console.log(quotedAmountOut.div(BigNumber.from(10).pow(pool.Token0.decimals)).toString());
 
-  // setInterval(async () => {
-  //   await pool.UpdateState();
-  //   console.log(`1${pool.Pool.token0.symbol} = ${pool.Pool.token0Price.toFixed()}${pool.Pool.token1.symbol}`);
-  //   console.log(`1${pool.Pool.token1.symbol} = ${pool.Pool.token1Price.toFixed()}${pool.Pool.token0.symbol}`);
-  // }, 1000);
+  setInterval(async () => {
+    await pool.UpdateState();
+    console.log(`1${pool.Pool.token0.symbol} = ${pool.Pool.token0Price.toFixed()}${pool.Pool.token1.symbol}`);
+    console.log(`1${pool.Pool.token1.symbol} = ${pool.Pool.token1Price.toFixed()}${pool.Pool.token0.symbol}`);
+  }, 1000);
 }
 
 main();
