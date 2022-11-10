@@ -64,6 +64,14 @@ extends Contract {
     return new ERC20(this.immutables.token1, IERC20ABI, this.provider, this.signer);
   }
 
+  public get Token0() {
+    return this.token0;
+  }
+
+  public get Token1() {
+    return this.token1;
+  }
+
   public get Pool() {
     return new Pool(
       this.token0,
