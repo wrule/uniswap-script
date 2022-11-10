@@ -6,14 +6,14 @@ import { abi as QuoterABI } from '@uniswap/v3-periphery/artifacts/contracts/lens
 const secret = require('./.secret.json');
 
 async function main() {
-  const provider = new ethers.providers.JsonRpcProvider(`https://optimism-mainnet.infura.io/v3/${secret.prj_id}`);
+  const provider = new ethers.providers.JsonRpcProvider(`https://mainnet.infura.io/v3/${secret.prj_id}`);
   const signer = provider.getSigner();
-  const poolAddress = '0x85149247691df622eaF1a8Bd0CaFd40BC45154a9';
+  const poolAddress = '0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640';
   const pool = new UniswapV3Pool(poolAddress, IUniswapV3PoolABI, provider, signer);
   await pool.Update();
 
   const quoterContract = new ethers.Contract('0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6', QuoterABI, provider);
-  const amountIn = 1;
+  const amountIn = 1500;
   const quotedAmountOut = await quoterContract.callStatic.quoteExactInputSingle(
     pool.Immutables.token0,
     pool.Immutables.token1,
