@@ -6,9 +6,9 @@ import { abi as QuoterABI } from '@uniswap/v3-periphery/artifacts/contracts/lens
 const secret = require('./.secret.json');
 
 async function main() {
-  const provider = new ethers.providers.JsonRpcProvider(`https://optimism-mainnet.infura.io/v3/${secret.prj_id}`);
+  const provider = new ethers.providers.JsonRpcProvider(`https://goerli.infura.io/v3/${secret.prj_id}`);
   const signer = provider.getSigner();
-  const poolAddress = '0x85149247691df622eaF1a8Bd0CaFd40BC45154a9';
+  const poolAddress = '0xF79817bD541D686F926aDCd01a950472B8AB890D';
   const pool = new UniswapV3Pool(poolAddress, IUniswapV3PoolABI, provider, signer);
   await pool.Update();
 
