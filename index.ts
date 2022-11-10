@@ -13,7 +13,8 @@ async function main() {
   await pool.Update();
 
   const quoterContract = new ethers.Contract('0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6', QuoterABI, provider);
-  const amountIn = 1500;
+  // 1e6 = 1USDC
+  const amountIn = 1188 * 1e6;
   const quotedAmountOut = await quoterContract.callStatic.quoteExactInputSingle(
     pool.Immutables.token0,
     pool.Immutables.token1,
@@ -21,7 +22,7 @@ async function main() {
     amountIn.toString(),
     0,
   );
-  console.log(quotedAmountOut.toString());
+  console.log(ethers.utils.formatEther(quotedAmountOut));
 
   // setInterval(async () => {
   //   await pool.UpdateState();
