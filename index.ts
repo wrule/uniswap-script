@@ -2,6 +2,8 @@ import { BigNumber, ethers } from 'ethers';
 import { abi as IUniswapV3PoolABI } from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json';
 import { UniswapV3Pool } from './contracts/uniswap_v3_pool';
 import { abi as QuoterABI } from '@uniswap/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json';
+import { Route, Trade } from '@uniswap/v3-sdk';
+import { CurrencyAmount, TradeType } from '@uniswap/sdk-core';
 
 const secret = require('./.secret.json');
 
@@ -22,7 +24,16 @@ async function main() {
     amountIn.toString(),
     0,
   );
+
+  const swapRoute = new Route([pool.Pool], pool.Token1, pool.Token0);
+  const uncheckedTradeExample = await Trade.createUncheckedTrade({
+    route: swapRoute,
+    inputAmount: CurrencyAmount.fromRawAmount(pool.Token1, amountIn.toString()),
+    outputAmount: CurrencyAmount.fromRawAmount(pool.Token0, quotedAmountOut.toString()),
+    tradeType: TradeType.EXACT_INPUT,
+  });
   console.log(quotedAmountOut.div(BigNumber.from(10).pow(pool.Token0.decimals)).toString());
+  console.log(uncheckedTradeExample);
 
   setInterval(async () => {
     await pool.UpdateState();
